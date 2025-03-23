@@ -4831,15 +4831,34 @@ void Item::updateRequiredStatsCacheForPlayer(const Player &player)
 
 StringOrView Item::getName() const
 {
+	StringOrView name;
+
 	if (isEmpty()) {
 		return std::string_view("");
 	} else if (!_iIdentified || _iCreateInfo == 0 || _iMagical == ITEM_QUALITY_NORMAL) {
-		return GetTranslatedItemName(*this);
+		name = GetTranslatedItemName(*this);
 	} else if (_iMagical == ITEM_QUALITY_UNIQUE) {
-		return _(UniqueItems[_iUid].UIName);
+		name = _(UniqueItems[_iUid].UIName);
 	} else {
-		return GetTranslatedItemNameMagical(*this, dwBuff & CF_HELLFIRE, true, std::nullopt);
+		name = GetTranslatedItemNameMagical(*this, dwBuff & CF_HELLFIRE, true, std::nullopt);
 	}
+
+	if (this->isWeapon()) {
+		std::string weaponType = "";
+
+		if (this->_iLoc == ILOC_ONEHAND) {
+			weaponType = " (1H)";
+		}
+		else if (this->_iLoc == ILOC_TWOHAND) {
+			weaponType = " (2H)";
+		}
+
+		std::string nameString = std::string(name.str());
+
+		name = fmt::format(fmt::runtime(_("{:s}{:s}")), nameString, weaponType);
+	}
+
+	return name;
 }
 
 bool CornerStoneStruct::isAvailable()
