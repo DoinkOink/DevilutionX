@@ -96,6 +96,12 @@ Point GetPanelPosition(UiPanels panel, Point offset = { 0, 0 });
 void DrawLifeFlaskUpper(const Surface &out);
 
 /**
+ * Draws all currently connected players health and mana pools in the middle left of the screen.
+ */
+
+void DrawPartyMemberInfo(const Surface &out);
+
+/**
  * Controls the drawing of the area of the life flask within the control panel.
  * First sets the fill amount then draws the empty flask cel portion then the filled
  * flask portion.
